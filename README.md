@@ -14,6 +14,10 @@ I hope this document help you study R and Github.
   + group_by()
   + command chaining
 * Data Reshape
-* GGplot2
+  + melt() == gather()
+  + acast() == spread()
+* Graphic
+  + GGplot2
+  + Plotly
 
 

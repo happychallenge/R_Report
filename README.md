@@ -6,6 +6,13 @@ I hope this document help you study R and Github.
 * R basic
 * Data import from Excel, CSV, *Database* and Statistics Package
 * Data Frame 
+  + select()
+  + filter()
+  + mutate()
+  + arrange()
+  + summarize()
+  + group_by()
+  + command chaining
 * Data Reshape
 * GGplot2
 

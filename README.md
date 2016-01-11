@@ -4,7 +4,7 @@ I hope this document help you study R and Github.
 
 ## R program include
 * R basic
-* Data import from Excel, CSV, Database and Statistics Package
+* Data import from Excel, CSV, *Database* and Statistics Package
 * Data Frame 
 * Data Reshape
 * GGplot2

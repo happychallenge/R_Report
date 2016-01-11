@@ -1,0 +1,115 @@
+---
+title: "Sales Analysis"
+author: "Namju"
+date: "2016年1月8日"
+output: ioslides_presentation
+runtime: shiny
+---
+
+## Sales Analysis of GSA Group 
+
+这是为了职员培训目的来开发的。<br>
+里面的内容不是真数据。谢谢 <br>
+
+To learn more, see [Interactive Documents](http://rmarkdown.rstudio.com/authoring_shiny.html).
+
+## Prepare Data Set for analysis #1
+```{r, echo=TRUE}
+require(RODBC)
+# Date Query for Data Ananlysis
+query <- "select so.FInterID, o.FItemID, o.FName, so.FDate, e.FItemID, e.FName, p.Fname, soi.FQty, soi.FPrice, soi.FAmount 
+from SEOrder so, t_Organization o, SEOrderEntry soi, t_ICItemCore p, t_Base_Emp e 
+where so.FCustID = o.FItemID and so.FInterID = soi.FInterId 
+and soi.FItemID = p.FItemID and so.FEmpID  = e.FItemID and so.FStatus = 3"
+
+# Database Connection
+kingDee <- odbcConnect("kingdee", uid="sa", pwd="lidong123.")
+
+# Execute SQL Query
+sale_df <- sqlQuery(kingDee, query, stringsAsFactors = FALSE)
+
+# Close Database Connection
+odbcClose(kingDee)
+
+```
+
+## Data manupaluation for control #2
+```{r, echo=TRUE}
+
+# Date control package
+require(lubridate)
+# naming for column
+names(sale_df) <- c("OrderID", "CustID", "CustName", "OrderDT", 
+                    "EmpID", "EmpName", "PrdName", "FQty", 
+                    "UnitPrice", "Amount")
+
+# Date : Character --> Date 
+sale_df$OrderDT <- as.Date(sale_df$OrderDT)
+sale_df$Year <- year(sale_df$OrderDT)
+sale_df$Month <- month(sale_df$OrderDT)
+
+# Change Amount thousand unit.
+sale_df$Amount <- sale_df$Amount / 1000
+```
+
+
+## Histgram of Order Amount using Plotly
+
+
+```{r, echo=FALSE, message=FALSE}
+require(plotly)
+sale_df1 <- sale_df[sale_df$Amount > 10000 & sale_df$Amount <=50000,]
+minx <- min(sale_df1$Amount)
+maxx <- max(sale_df1$Amount)
+
+  plot_ly(sale_df1, x = Amount, type="histogram",
+        xbins = list(start=minx, end=maxx, size = 1000))
+  
+```
+
+## Histgram of Order using GGPlot
+
+
+```{r, echo=FALSE, message=FALSE}
+
+  
+  ggplot(sale_df1, aes(x = Amount)) +
+      geom_histogram(aes(y=..density..),fill="blue", alpha = 0.5) +
+      geom_density(col = "red", weight = 5)
+  
+```
+
+
+## Histgram using dynamic control
+
+```{r, echo=FALSE, message=FALSE}
+
+inputPanel(
+  selectInput("bins", label = "Number of bins:",
+              choices = c(10, 20, 35, 50), selected = 20)
+)
+  
+renderPlot({
+  
+  size <- (maxx - minx) / as.numeric(input$bins)  
+    ggplot(sale_df1, aes(x = Amount)) +
+      geom_histogram(aes(y=..density..),fill="blue", binwidth = size, alpha = 0.5) +
+      geom_density(col = "red", weight = 5)  
+})
+```
+
+
+
+## Slide with Bullets
+
+- Bullet 1
+- Bullet 2
+- Bullet 3
+
+## Slide with R Code and Output
+
+```{r}
+summary(cars)
+```
+
+

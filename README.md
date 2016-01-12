@@ -20,5 +20,6 @@ I hope this document help you study R and Github.
 * Graphic
   + GGplot2
   + Plotly
+* 윤남주 
 
 
